@@ -6,6 +6,7 @@ ec2_client = boto3.client('ec2')
 ec2_vol = ec2_client.describe_volumes()
 volume_ids = []
 
+
 def create_snapshot():
     for vol in ec2_vol['Volumes']:
         new_snapshot = ec2_client.create_snapshot(
@@ -14,7 +15,9 @@ def create_snapshot():
         print('Created snapshot {}'.format(new_snapshot['SnapshotId']))
 
 
-schedule.every().monday.do(create_snapshot)
+schedule.every().seconds.do(create_snapshot)
 
 while True:
     schedule.run_pending()
+
+
