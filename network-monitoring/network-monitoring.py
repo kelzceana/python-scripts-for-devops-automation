@@ -31,9 +31,10 @@ def restart_container(container_id, hostname, username):
     ssh_client.close()
 
 def restart_server_and_container(server_id, container_id, hostname, username):
+    # restart linode server
+    print('rebooting server...')
     linode_client = linode_api4.LinodeClient(LINODE_TOKEN)
     nginx_server = linode_client.load(linode_api4.Instance, server_id )
-    print('rebooting server...')
     nginx_server.reboot()
 
     #restart container
@@ -44,7 +45,7 @@ def restart_server_and_container(server_id, container_id, hostname, username):
             restart_container(container_id, hostname, username)
             break
 
-def monitor_website(website_ip):
+def monitor_application(website_ip):
     try:
         response = requests.get("http://" + website_ip)
         if response.status_code == 200:
@@ -66,4 +67,10 @@ def monitor_website(website_ip):
             restart_server_and_container('71703369', '955f0862ee63', '66.228.40.95', 'root')
 
 
-monitor_website("66.228.40.95:8080")
+'''
+schedule.every(5).minutes.do(monitor_application(<IP>))
+
+#while True:
+    schedule.run_pending()
+'''
+
